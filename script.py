@@ -65,7 +65,7 @@ def send_messages(message_urls, chrome_profile = "Default"):
                 
                 # sleep for a while to avoid getting ip blocked due to large number of requests
                 time.sleep(5)
-                
+
                 # sending status
                 sending_status.append({
                     "url": url,
@@ -98,7 +98,7 @@ def get_message_urls(input_excel):
     return df.to_list()
 
 def write_log_to_csv(list_of_dict, csv_filename = "sending_log.csv"):
-    with open(csv_filename, 'w') as f:
+    with open(csv_filename, 'w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, list_of_dict[0].keys())
         writer.writeheader()
         writer.writerows(list_of_dict)
