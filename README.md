@@ -13,6 +13,6 @@
 
 ## Running the script
   - Run the script `python3 script.py`
-  - Optional arguments:
+  - (Optional) arguments:
     - `--profile` : Chrome profile where whatsapp web is logged in. Get profile name by going to chrome://version/
     - `--input_excel` : Path to excel input. If not provided, script checks for recipients.xlsx file in the same directory.
