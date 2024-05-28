@@ -43,7 +43,7 @@ def send_messages(message_urls, chrome_profile = "Default"):
         # set chrome user profile name
         chrome_options.add_argument(f"--profile-directory={chrome_profile}")
         # make headless
-        chrome_options.add_argument('headless')
+        chrome_options.add_argument('--headless=new')
 
         # create chrome driver
         driver = webdriver.Chrome(options=chrome_options)
@@ -54,8 +54,6 @@ def send_messages(message_urls, chrome_profile = "Default"):
     try:
         # iterate over message urls and send messages
         for url in message_urls:
-            # sleep for a while to avoid getting ip blocked due to large number of requests
-            time.sleep(5)
 
             print(f"Sending message <{url}>")
 
@@ -63,7 +61,10 @@ def send_messages(message_urls, chrome_profile = "Default"):
                 driver.get(url)
 
                 # wait till send button is loaded and click
-                WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[2]/button'))).click()
+                WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[2]/button'))).click()
+                
+                # sleep for a while to avoid getting ip blocked due to large number of requests
+                time.sleep(5)
                 
                 # sending status
                 sending_status.append({
@@ -77,7 +78,7 @@ def send_messages(message_urls, chrome_profile = "Default"):
                     "status": "failed"
                 })
 
-                print("FailedToSend --> Skipping")
+                print(f"FailedToSend --> Skipping <{repr(e)}>")
                 continue
 
     except Exception as e:
