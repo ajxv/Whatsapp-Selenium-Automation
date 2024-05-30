@@ -1,5 +1,7 @@
 # Whatsapp Selenium Automation
 
+Script to automate WhatsApp bulk messaging using Python and Selenium, bypassing the need for an API, allowing you to send personalized messages to multiple recipients directly through the WhatsApp web interface.
+
 ## Requirements
   - Python 3.1x
   - Chrome browser
