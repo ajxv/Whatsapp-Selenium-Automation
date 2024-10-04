@@ -60,7 +60,7 @@ def send_messages(message_urls, chrome_profile = "Default"):
                 driver.get(url)
 
                 # wait till send button is loaded and click
-                WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[2]/button'))).click()
+                WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[2]/button'))).click()
 
                 
                 # sleep for a while to avoid getting ip blocked due to large number of requests
