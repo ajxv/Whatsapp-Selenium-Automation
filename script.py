@@ -2,6 +2,7 @@
 ## whatsapp_web_chat_link_format: "https://web.whatsapp.com/send?phone={}&text={}"
 ##
 
+import csv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,6 +18,9 @@ from os.path import expanduser
 import argparse
 
 def send_messages(message_urls, chrome_profile = "Default"):
+
+    # keep track of status and write to csv at the end for future reference
+    sending_status = []
 
     try:
         # chrome driver options
@@ -58,16 +62,33 @@ def send_messages(message_urls, chrome_profile = "Default"):
                 # wait till send button is loaded and click
                 WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[2]/button'))).click()
 
+                
                 # sleep for a while to avoid getting ip blocked due to large number of requests
                 time.sleep(5)
-                
-            except TimeoutException as e:
-                print("TimedOut --> Skipping")
+
+                # sending status
+                sending_status.append({
+                    "url": url,
+                    "status": "success"
+                })
+            except Exception as e:
+                # sending status
+                sending_status.append({
+                    "url": url,
+                    "status": "failed"
+                })
+
+                print(f"FailedToSend --> Skipping <{repr(e)}>")
+
                 continue
 
     except Exception as e:
+        if sending_status:
+            write_log_to_csv(sending_status)
         print(f"Encountered exception while sending messages. <{repr(e)}>")
     else:
+        if sending_status:
+            write_log_to_csv(sending_status)
         print("All messages send --> Exiting")
 
 def get_message_urls(input_excel):
@@ -76,6 +97,12 @@ def get_message_urls(input_excel):
     df = pd.read_excel(input_excel)['Link']
 
     return df.to_list()
+
+def write_log_to_csv(list_of_dict, csv_filename = "sending_log.csv"):
+    with open(csv_filename, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, list_of_dict[0].keys())
+        writer.writeheader()
+        writer.writerows(list_of_dict)
 
 if __name__ == "__main__":
 
